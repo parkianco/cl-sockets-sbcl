@@ -27,12 +27,10 @@
 TYPE can be :STREAM (TCP) or :DATAGRAM (UDP).
 PROTOCOL is :TCP or :UDP."
   (declare (ignore protocol))
-  (let ((socket-type (ecase type
-                       (:stream sb-bsd-sockets:sock-stream)
-                       (:datagram sb-bsd-sockets:sock-dgram))))
-    (make-instance 'sb-bsd-sockets:inet-socket
-                   :type socket-type
-                   :protocol :tcp)))
+  ;; sb-bsd-sockets:inet-socket accepts :stream/:datagram directly as :type
+  (make-instance 'sb-bsd-sockets:inet-socket
+                 :type type
+                 :protocol :tcp))
 
 (defun socket-close (socket)
   "Close SOCKET."
