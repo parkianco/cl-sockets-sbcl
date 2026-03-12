@@ -4,6 +4,9 @@
 ;;;; package.lisp
 ;;;; cl-sockets-sbcl package definition
 
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (require :sb-bsd-sockets))
+
 (defpackage #:cl-sockets-sbcl
   (:use #:cl)
   (:nicknames #:sockets-sbcl)
