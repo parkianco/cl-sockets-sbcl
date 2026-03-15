@@ -11,7 +11,11 @@
   (:use #:cl)
   (:nicknames #:sockets-sbcl)
   (:export
-   #:with-sockets-sbcl-timing
+   #:identity-list
+   #:flatten
+   #:map-keys
+   #:now-timestamp
+#:with-sockets-sbcl-timing
    #:sockets-sbcl-batch-process
    #:sockets-sbcl-health-check;; Socket creation/destruction
    #:make-socket
