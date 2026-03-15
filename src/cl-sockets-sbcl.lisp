@@ -39,3 +39,38 @@
 (define-condition socket-error (cl-sockets-sbcl-error) ())
 (define-condition connection-refused-error (cl-sockets-sbcl-error) ())
 (define-condition connection-timeout-error (cl-sockets-sbcl-error) ())
+
+
+;;; ============================================================================
+;;; Standard Toolkit for cl-sockets-sbcl
+;;; ============================================================================
+
+(defmacro with-sockets-sbcl-timing (&body body)
+  "Executes BODY and logs the execution time specific to cl-sockets-sbcl."
+  (let ((start (gensym))
+        (end (gensym)))
+    `(let ((,start (get-internal-real-time)))
+       (multiple-value-prog1
+           (progn ,@body)
+         (let ((,end (get-internal-real-time)))
+           (format t "~&[cl-sockets-sbcl] Execution time: ~A ms~%"
+                   (/ (* (- ,end ,start) 1000.0) internal-time-units-per-second)))))))
+
+(defun sockets-sbcl-batch-process (items processor-fn)
+  "Applies PROCESSOR-FN to each item in ITEMS, handling errors resiliently.
+Returns (values processed-results error-alist)."
+  (let ((results nil)
+        (errors nil))
+    (dolist (item items)
+      (handler-case
+          (push (funcall processor-fn item) results)
+        (error (e)
+          (push (cons item e) errors))))
+    (values (nreverse results) (nreverse errors))))
+
+(defun sockets-sbcl-health-check ()
+  "Performs a basic health check for the cl-sockets-sbcl module."
+  (let ((ctx (initialize-sockets-sbcl)))
+    (if (validate-sockets-sbcl ctx)
+        :healthy
+        :degraded)))

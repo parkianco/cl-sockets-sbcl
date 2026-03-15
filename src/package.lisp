@@ -11,7 +11,9 @@
   (:use #:cl)
   (:nicknames #:sockets-sbcl)
   (:export
-   ;; Socket creation/destruction
+   #:with-sockets-sbcl-timing
+   #:sockets-sbcl-batch-process
+   #:sockets-sbcl-health-check;; Socket creation/destruction
    #:make-socket
    #:socket-close
    ;; Client operations
